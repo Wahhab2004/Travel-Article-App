@@ -1,7 +1,24 @@
 import api from "@/lib/api";
 
 /* READ */
-export const getArticles = () => api.get("/articles?populate=*");
+export const getArticles = (
+	page: number = 1,
+	pageSize: number = 9,
+	search: string = "",
+	category: string = ""
+) => {
+	let url = `/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=publishedAt:desc`;
+
+	if (search) {
+		url += `&filters[title][$containsi]=${search}`;
+	}
+
+	if (category) {
+		url += `&filters[category][name][$eq]=${category}`;
+	}
+
+	return api.get(url);
+};
 
 export const getArticleBydocumentId = (documentId: string) =>
 	api.get(`/articles/${documentId}`);
@@ -11,7 +28,7 @@ export const createArticle = (data: {
 	title: string;
 	description: string;
 	cover_image_url: string;
-	category: number;
+	category: string;
 }) =>
 	api.post("/articles", {
 		data,
@@ -33,4 +50,5 @@ export const updateArticle = (
 	});
 
 /* DELETE */
-export const deleteArticle = (documentId: string) => api.delete(`/articles/${documentId}`);
+export const deleteArticle = (documentId: string) =>
+	api.delete(`/articles/${documentId}`);

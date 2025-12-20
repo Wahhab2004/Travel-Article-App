@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { articleSchema, ArticleFormValues } from "@/schemas/article.schema";
 import { getArticleBydocumentId, updateArticle } from "@/lib/articles";
 import { useParams, useRouter } from "next/navigation";
 import { toastSuccess, toastError } from "@/lib/toast";
@@ -18,63 +21,69 @@ import Link from "next/link";
 export default function EditArticlePage() {
 	const { id } = useParams<{ id: string }>();
 	const router = useRouter();
-
 	const [categories, setCategories] = useState<any[]>([]);
-	const [loading, setLoading] = useState(false);
 	const [fetching, setFetching] = useState(true);
 
-	const [form, setForm] = useState({
-		title: "",
-		description: "",
-		cover_image_url: "",
-		category: 1,
+	// 1. Inisialisasi React Hook Form
+	const {
+		register,
+		handleSubmit,
+		reset,
+		watch,
+		formState: { errors, isSubmitting },
+	} = useForm<ArticleFormValues>({
+		resolver: zodResolver(articleSchema),
 	});
 
+	const coverImageUrl = watch("cover_image_url");
 
+	// Fetch Kategori
 	useEffect(() => {
 		getCategories().then((res) => {
 			setCategories(res.data.data);
 		});
 	}, []);
 
-
+	// 2. Fetch Data Artikel & Masukkan ke Form
 	useEffect(() => {
 		const fetchArticle = async () => {
 			setFetching(true);
 			try {
 				const res = await getArticleBydocumentId(id);
-			
-				const data = res.data.data || res.data.data;
+				const data = res.data.data;
 
-				setForm({
+				// Mengisi nilai default form menggunakan reset() dari react-hook-form
+				reset({
 					title: data.title || "",
 					description: data.description || "",
 					cover_image_url: data.cover_image_url || "",
-					category: data.category?.data?.id || 1,
+					category: data.category?.id || "",
 				});
-			} catch {
+			} catch (error) {
 				toastError("Gagal memuat artikel");
 			} finally {
 				setFetching(false);
 			}
 		};
 
-		fetchArticle();
-	}, [id]);
+		if (id) fetchArticle();
+	}, [id, reset]);
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setLoading(true);
-
+	// 3. Handler Update
+	const onSubmit = async (data: ArticleFormValues) => {
 		try {
-			await updateArticle(id, form);
+			const payload = {
+				...data,
+				category: Number(data.category),
+			};
+
+			await updateArticle(id, payload);
 			toastSuccess("Artikel berhasil diperbarui");
 			router.push("/articles");
+			router.refresh();
 		} catch (error: any) {
 			const apiError = error?.response?.data?.error;
 			toastError(apiError?.name || "Gagal update artikel", apiError?.message);
-		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -89,11 +98,10 @@ export default function EditArticlePage() {
 
 	return (
 		<div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-			{/* Header */}
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-4">
 					<Link href="/articles">
-						<button className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+						<button className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500 text-black">
 							<ArrowLeft size={20} />
 						</button>
 					</Link>
@@ -107,10 +115,10 @@ export default function EditArticlePage() {
 			</div>
 
 			<form
-				onSubmit={handleSubmit}
-				className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-black"
+				onSubmit={handleSubmit(onSubmit)}
+				className="grid grid-cols-1 lg:grid-cols-3 gap-8"
 			>
-				{/* Bagian Utama Form */}
+				{/* Bagian Utama */}
 				<div className="lg:col-span-2 space-y-6">
 					<div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm space-y-6">
 						<div className="space-y-2">
@@ -118,12 +126,17 @@ export default function EditArticlePage() {
 								Judul Artikel
 							</label>
 							<input
-								required
-								value={form.title}
+								{...register("title")}
 								placeholder="E.g. Keajaiban Alam di Dieng"
-								className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
-								onChange={(e) => setForm({ ...form, title: e.target.value })}
+								className={`w-full bg-slate-50 border ${
+									errors.title ? "border-red-500" : "border-slate-200"
+								} rounded-2xl p-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium`}
 							/>
+							{errors.title && (
+								<p className="text-xs text-red-500 font-bold italic ml-1">
+									{errors.title.message}
+								</p>
+							)}
 						</div>
 
 						<div className="space-y-2">
@@ -131,39 +144,45 @@ export default function EditArticlePage() {
 								Deskripsi Artikel
 							</label>
 							<textarea
-								required
+								{...register("description")}
 								rows={6}
-								value={form.description}
 								placeholder="Tuliskan detail perjalanan..."
-								className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
-								onChange={(e) =>
-									setForm({ ...form, description: e.target.value })
-								}
+								className={`w-full bg-slate-50 border ${
+									errors.description ? "border-red-500" : "border-slate-200"
+								} rounded-2xl p-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all resize-none`}
 							/>
+							{errors.description && (
+								<p className="text-xs text-red-500 font-bold italic ml-1">
+									{errors.description.message}
+								</p>
+							)}
 						</div>
 					</div>
 				</div>
 
-				{/* Sidebar Metadata */}
-				<div className="space-y-6 text-black">
+				{/* Sidebar */}
+				<div className="space-y-6">
 					<div className="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm space-y-5">
 						<div className="space-y-2">
 							<label className="text-sm font-bold text-slate-700 ml-1">
 								Kategori
 							</label>
 							<select
-								className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
-								value={form.category}
-								onChange={(e) =>
-									setForm({ ...form, category: Number(e.target.value) })
-								}
+								{...register("category")}
+								className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 focus:outline-none cursor-pointer"
 							>
+								<option value="">Pilih Kategori</option>
 								{categories.map((cat) => (
-									<option key={cat.id} value={cat.id}>
-										{cat?.name || cat.name}
+									<option key={cat.id} value={cat.id.toString()}>
+										{cat.attributes?.name || cat.name}
 									</option>
 								))}
 							</select>
+							{errors.category && (
+								<p className="text-xs text-red-500 font-bold italic ml-1">
+									{errors.category.message}
+								</p>
+							)}
 						</div>
 
 						<div className="space-y-2">
@@ -172,33 +191,38 @@ export default function EditArticlePage() {
 							</label>
 							<div className="relative">
 								<input
-									value={form.cover_image_url}
+									{...register("cover_image_url")}
 									placeholder="https://..."
-									className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-10 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-sm"
-									onChange={(e) =>
-										setForm({ ...form, cover_image_url: e.target.value })
-									}
+									className={`w-full bg-slate-50 border ${
+										errors.cover_image_url
+											? "border-red-500"
+											: "border-slate-200"
+									} rounded-xl p-3 pl-10 text-slate-900 text-sm`}
 								/>
 								<ImageIcon
 									className="absolute left-3 top-3.5 text-slate-400"
 									size={16}
 								/>
 							</div>
+							{errors.cover_image_url && (
+								<p className="text-xs text-red-500 font-bold italic ml-1">
+									{errors.cover_image_url.message}
+								</p>
+							)}
 						</div>
 
-						{/* Preview Image */}
+						{/* Preview */}
 						<div className="aspect-video rounded-2xl bg-slate-50 border border-dashed border-slate-200 overflow-hidden flex items-center justify-center relative">
-							{form.cover_image_url ? (
+							{coverImageUrl ? (
 								<img
-									src={form.cover_image_url}
+									src={coverImageUrl}
 									alt="Preview"
 									className="w-full h-full object-cover"
-									onError={(e) => (e.currentTarget.src = "")}
 								/>
 							) : (
-								<div className="text-center">
-									<Globe size={24} className="mx-auto text-slate-300 mb-1" />
-									<p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+								<div className="text-center text-slate-300">
+									<Globe size={24} className="mx-auto mb-1" />
+									<p className="text-[10px] font-bold uppercase tracking-wider">
 										Image Preview
 									</p>
 								</div>
@@ -207,16 +231,15 @@ export default function EditArticlePage() {
 
 						<Button
 							type="submit"
-							disabled={loading}
-							className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-6 font-bold shadow-lg shadow-blue-100 flex items-center gap-2 transition-all"
+							disabled={isSubmitting}
+							className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-6 font-bold shadow-lg shadow-blue-100 flex items-center gap-2"
 						>
-							{loading ? (
-								"Menyimpan..."
+							{isSubmitting ? (
+								<Loader2 className="animate-spin" size={18} />
 							) : (
-								<>
-									<Save size={18} /> Perbarui Artikel
-								</>
+								<Save size={18} />
 							)}
+							Simpan Perubahan
 						</Button>
 					</div>
 				</div>

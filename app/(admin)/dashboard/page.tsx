@@ -25,7 +25,7 @@ export default function DashboardPage() {
 				]);
 
 				setStats(statsRes);
-				// Mengambil 3 artikel terbaru
+
 				setRecentArticles(articlesRes.data.data.slice(0, 3));
 			} catch (error) {
 				toastError("Gagal memuat data dashboard");
@@ -38,7 +38,7 @@ export default function DashboardPage() {
 	}, []);
 
 	return (
-		<div className="space-y-8 animate-in fade-in duration-500">
+		<div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto px-6">
 			{/* Header Section */}
 			<div className="flex items-center justify-between">
 				<div>
@@ -46,7 +46,11 @@ export default function DashboardPage() {
 						Selamat Datang, Admin!
 					</h1>
 					<p className="text-slate-500 mt-1">
-						Berikut adalah ringkasan aktivitas <span className="text-xl text-blue-700 font-semibold italic">Tracle</span> hari ini.
+						Berikut adalah ringkasan aktivitas{" "}
+						<span className="text-xl text-blue-700 font-semibold italic">
+							Tracle
+						</span>{" "}
+						hari ini.
 					</p>
 				</div>
 			</div>
@@ -122,7 +126,7 @@ export default function DashboardPage() {
 										</div>
 										<div className="text-right">
 											<span className="text-xs font-semibold bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100">
-												{data.category?.data?.name || "Tanpa Kategori"}
+												{data.category?.name || "Tanpa Kategori"}
 											</span>
 										</div>
 									</div>
