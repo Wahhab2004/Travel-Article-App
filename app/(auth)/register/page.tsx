@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // Gunakan Link untuk navigasi lebih cepat
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, User, Mail, LockKeyhole, Compass } from "lucide-react";
 
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
 			toastSuccess(
 				"Registrasi berhasil",
-				"Silakan login menggunakan akun Anda"
+				"Silakan login menggunakan akun baru Anda"
 			);
 
 			router.push("/login");
@@ -55,20 +55,26 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className="min-h-screen w-full flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden">
-			{/* Background Assets (Blur Blobs) */}
-			<div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[120px]" />
-			<div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-900/20 rounded-full blur-[120px]" />
+		<div className="min-h-screen w-full flex items-center justify-center bg-slate-50 relative overflow-hidden">
+			{/* Soft Background Accents */}
+			<div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-100/50 rounded-full blur-[120px]" />
+			<div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-100/50 rounded-full blur-[120px]" />
 
-			{/* Card Glassmorphism */}
-			<div className="relative z-10 w-full max-w-md p-8 mx-4 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl">
-				<div className="text-center mb-8">
-					<h1 className="text-3xl font-semibold text-white tracking-tight">
-						Create Account
+			{/* Card Glassmorphism Light */}
+			<div className="relative z-10 w-full max-w-md p-10 mx-4 bg-white/70 backdrop-blur-2xl border border-white rounded-[48px] shadow-2xl shadow-blue-100/50 animate-in fade-in zoom-in duration-500">
+				{/* Header */}
+				<div className="text-center mb-8 space-y-2">
+					<div className="flex justify-center mb-4">
+						<div className="bg-blue-600 p-3 rounded-2xl shadow-lg shadow-blue-200">
+							<Compass className="text-white" size={28} />
+						</div>
+					</div>
+					<h1 className="text-3xl font-black text-slate-900 tracking-tight">
+						Daftar Akun
 					</h1>
-					<p className="text-gray-400 mt-2 text-sm font-light">
-						Create your account to start using{" "}
-						<span className="text-blue-400">Tracle</span>
+					<p className="text-slate-500 text-sm font-medium">
+						Mulai petualangan Anda bersama{" "}
+						<span className="text-blue-600 font-bold">Tracle</span>
 					</p>
 				</div>
 
@@ -81,86 +87,107 @@ export default function RegisterPage() {
 					})}
 					className="space-y-5"
 				>
-					{/* Username */}
-					<div className="space-y-1">
-						<label className="text-xs text-gray-400 ml-4 font-medium uppercase tracking-wider">
+					{/* Input Username */}
+					<div className="space-y-2">
+						<label className="text-xs text-slate-500 ml-4 font-bold uppercase tracking-widest">
 							Username
 						</label>
-						<input
-							{...form.register("username")}
-							placeholder="johndoe"
-							className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-						/>
+						<div className="relative">
+							<input
+								{...form.register("username")}
+								placeholder="johndoe"
+								className="w-full bg-white border border-slate-200 rounded-2xl p-4 pl-12 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
+							/>
+							<User
+								className="absolute left-4 top-4 text-slate-400"
+								size={20}
+							/>
+						</div>
 						{form.formState.errors.username && (
-							<p className="text-red-400 text-xs mt-1 ml-4">
+							<p className="text-red-500 text-xs mt-1 ml-4 font-medium italic">
 								{form.formState.errors.username.message}
 							</p>
 						)}
 					</div>
 
-					{/* Email */}
-					<div className="space-y-1">
-						<label className="text-xs text-gray-400 ml-4 font-medium uppercase tracking-wider">
+					{/* Input Email */}
+					<div className="space-y-2">
+						<label className="text-xs text-slate-500 ml-4 font-bold uppercase tracking-widest">
 							Email Address
 						</label>
-						<input
-							{...form.register("email")}
-							placeholder="example@mail.com"
-							className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-						/>
-
+						<div className="relative">
+							<input
+								{...form.register("email")}
+								type="email"
+								placeholder="name@example.com"
+								className="w-full bg-white border border-slate-200 rounded-2xl p-4 pl-12 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
+							/>
+							<Mail
+								className="absolute left-4 top-4 text-slate-400"
+								size={20}
+							/>
+						</div>
 						{form.formState.errors.email && (
-							<p className="text-red-400 text-xs mt-1 ml-4">
+							<p className="text-red-500 text-xs mt-1 ml-4 font-medium italic">
 								{form.formState.errors.email.message}
 							</p>
 						)}
 					</div>
 
-					{/* Password */}
-					<div className="space-y-1">
-						<label className="text-xs text-gray-400 ml-4 font-medium uppercase tracking-wider">
+					{/* Input Password */}
+					<div className="space-y-2">
+						<label className="text-xs text-slate-500 ml-4 font-bold uppercase tracking-widest">
 							Password
 						</label>
-						<input
-							type="password"
-							{...form.register("password")}
-							placeholder="••••••••"
-							className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-						/>
-
+						<div className="relative">
+							<input
+								type="password"
+								{...form.register("password")}
+								placeholder="••••••••"
+								className="w-full bg-white border border-slate-200 rounded-2xl p-4 pl-12 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
+							/>
+							<LockKeyhole
+								className="absolute left-4 top-4 text-slate-400"
+								size={20}
+							/>
+						</div>
 						{form.formState.errors.password && (
-							<p className="text-red-400 text-xs mt-1 ml-4">
+							<p className="text-red-500 text-xs mt-1 ml-4 font-medium italic">
 								{form.formState.errors.password.message}
 							</p>
 						)}
 					</div>
 
-					{/* Button Register */}
+					{/* Register Button */}
 					<Button
 						type="submit"
 						disabled={loading || !form.formState.isValid}
-						className="w-full h-14 mt-4 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50 transition-all"
+						className="w-full h-14 mt-2 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl shadow-blue-200 disabled:opacity-50 transition-all"
 					>
-						{loading ? "Registering..." : "Register"}
-						{!loading && (
-							<div className="bg-white/20 p-1 rounded-full">
-								<ArrowRight size={18} />
-							</div>
-						)}
+						{loading ? "Mendaftarkan..." : "Daftar Sekarang"}
+						{!loading && <ArrowRight size={20} />}
 					</Button>
 
+					{/* Login Link */}
 					<div className="text-center mt-6">
-						<p className="text-xs text-gray-500 font-light">
-							Already have an account?{" "}
+						<p className="text-sm text-slate-500 font-medium">
+							Sudah memiliki akun?{" "}
 							<Link
 								href="/login"
-								className="text-gray-200 font-semibold underline hover:text-blue-400 transition-colors"
+								className="text-blue-600 font-bold hover:underline underline-offset-4"
 							>
-								Login here
+								Masuk di sini
 							</Link>
 						</p>
 					</div>
 				</form>
+			</div>
+
+			{/* Sub-footer */}
+			<div className="absolute bottom-8 text-center w-full">
+				<p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">
+					Join the Tracle Community
+				</p>
 			</div>
 		</div>
 	);
