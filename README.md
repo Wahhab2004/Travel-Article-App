@@ -1,75 +1,87 @@
-# 📰 Content Management Dashboard
+# 🧭 Tracle — Travel Article Dashboard
 
-A full-stack Content Management System (CMS) built with **Next.js** and **Strapi**, featuring authentication, role-based admin dashboard, and CRUD management for Articles and Categories.
-
-This project is designed as an admin dashboard for managing articles and categories, with secure authentication using JWT and a clean, modular frontend architecture.
+**Tracle** adalah aplikasi **Content Management System (CMS)** berbasis web untuk mengelola artikel perjalanan (travel articles).  
+Aplikasi ini dibangun menggunakan **Next.js (App Router)** sebagai frontend dan **Strapi v4** sebagai backend, dengan fitur autentikasi, dashboard admin, serta CRUD untuk Articles dan Categories.
 
 ---
 
-## 📌 Project Features
+## ✨ Fitur Utama
 
-### 🔐 Authentication
+### 🔐 Autentikasi
 
 - Login & Register (Strapi Auth)
-- JWT-based authentication
-- Protected admin routes
-- Auto logout on unauthorized access
-- Manual logout / clear token
+- Autentikasi berbasis JWT
+- Proteksi halaman admin menggunakan Middleware
+- Logout & Clear Token
+- Auto logout ketika token tidak valid (401)
 
-### 📊 Admin Dashboard
+### 📊 Dashboard Admin
 
-- Dashboard overview with total articles count
-- Sidebar-based admin layout
-- Protected pages (Dashboard, Articles, Categories)
+- Halaman dashboard admin
+- Menampilkan total artikel
+- Sidebar khusus admin
 
-### 📰 Articles Management
+### 📰 Manajemen Artikel (Articles)
 
-- Create articles
-- Read articles (list view)
-- Update articles
-- Delete articles
-- Category relation support
+- Create artikel
+- Read / List artikel
+- Update artikel
+- Delete artikel
+- Relasi artikel dengan kategori
 
-### 🗂️ Categories Management
+### 🗂️ Manajemen Kategori (Categories)
 
-- Create categories
-- Read categories
-- Update categories
-- Delete categories
+- Create kategori
+- Read / List kategori
+- Update kategori
+- Delete kategori
 
 ### 🔔 User Experience
 
-- Global toast notification (success & error)
-- Dynamic error handling from backend
-- Clean and responsive UI
+- Toast notification global (success & error)
+- Pesan error dinamis dari backend
+- Struktur layout terpisah (public, auth, admin)
 
 ---
 
-## 🏗️ Project Structure
+## 🏗️ Struktur Folder Project
+
+Struktur utama project **Tracle** adalah sebagai berikut:
 
 ```bash
-.
+TRAVEL-ARTICLE-APP
 ├── app/
-│   ├── (public)/           # Public pages (login, register, home)
-│   ├── dashboard/          # Admin dashboard layout & page
-│   ├── articles/           # Articles CRUD pages
-│   ├── categories/         # Categories CRUD pages
-│   └── middleware.ts       # Route protection
+│   ├── (admin)/                 # Halaman admin (protected)
+│   │   ├── articles/            # CRUD Articles
+│   │   ├── categories/          # CRUD Categories
+│   │   ├── dashboard/           # Dashboard admin
+│   │   └── layout.tsx           # Layout admin (Sidebar)
+│   │
+│   ├── (auth)/                  # Halaman autentikasi
+│   │   ├── login/
+│   │   └── register/
+│   │
+│   ├── (public)/                # Halaman publik
+│   │   ├── page.tsx
+│   │   └── layout.tsx
+│   │
+│   ├── layout.tsx               # Root layout
+│   ├── providers.tsx            # Provider (Redux, dll)
+│   └── favicon.ico
 │
 ├── components/
-│   ├── layout/             # Navbar, Sidebar, Footer
-│   └── ui/                 # Reusable UI components
+│   ├── article/                 # Komponen artikel
+│   ├── layout/                  # Navbar, Sidebar, Footer
+│   ├── ui/                      # Komponen UI reusable
+│   └── LogoutButton.tsx
 │
-├── lib/
-│   ├── api.ts              # Axios instance & interceptors
-│   ├── articles.ts         # Articles API handler
-│   ├── categories.ts       # Categories API handler
-│   ├── dashboard.ts        # Dashboard statistics
-│   ├── storage.ts          # JWT storage helpers
-│   └── toast.ts            # Global toast helper
-│
-├── store/
-│   └── slices/             # Redux slices
-│
+├── hooks/                       # Custom hooks
+├── lib/                         # Helper API, toast, storage
+├── schemas/                     # Zod schemas
+├── store/                       # Redux store & slices
+├── styles/                      # Styling tambahan
+├── types/                       # TypeScript types
+├── middleware.ts                # Route protection
+├── .env                         # Environment variables
 └── README.md
 ```
