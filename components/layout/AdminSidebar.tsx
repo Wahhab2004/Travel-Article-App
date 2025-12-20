@@ -8,6 +8,7 @@ import LogoutButton from "../LogoutButton";
 const menus = [
 	{ label: "Dashboard", href: "/dashboard" },
 	{ label: "Articles", href: "/articles" },
+	{ label: "Categories", href: "/categories" },
 ];
 
 export default function AdminSidebar() {

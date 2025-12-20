@@ -5,10 +5,19 @@ import { getArticleBydocumentId, updateArticle } from "@/lib/articles";
 import { useParams, useRouter } from "next/navigation";
 import { toastSuccess, toastError } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
+import { getCategories } from "@/lib/categories";
 
 export default function EditArticlePage() {
 	const { id } = useParams<{ id: string }>();
 	const router = useRouter();
+
+	const [categories, setCategories] = useState<any[]>([]);
+
+	useEffect(() => {
+		getCategories().then((res) => {
+			setCategories(res.data.data);
+		});
+	}, []);
 
 	const [form, setForm] = useState({
 		title: "",
@@ -16,10 +25,6 @@ export default function EditArticlePage() {
 		cover_image_url: "",
 		category: 1,
 	});
-    
-    
-    
-
 
 	useEffect(() => {
 		const fetchArticle = async () => {
@@ -79,13 +84,18 @@ export default function EditArticlePage() {
 				onChange={(e) => setForm({ ...form, cover_image_url: e.target.value })}
 			/>
 
-			<input
-				type="number"
-				placeholder="Category ID"
+            
+			<select
 				className="border p-2 w-full"
 				value={form.category}
 				onChange={(e) => setForm({ ...form, category: Number(e.target.value) })}
-			/>
+			>
+				{categories.map((cat) => (
+					<option key={cat.id} value={cat.id}>
+						{cat.name}
+					</option>
+				))}
+			</select>
 
 			<Button type="submit">Update</Button>
 		</form>

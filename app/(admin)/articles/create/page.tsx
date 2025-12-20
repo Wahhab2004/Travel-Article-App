@@ -5,9 +5,19 @@ import { createArticle } from "@/lib/articles";
 import { toastSuccess, toastError } from "@/lib/toast";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { getCategories } from "@/lib/categories";
+import { useEffect } from "react";
 
 export default function CreateArticlePage() {
 	const router = useRouter();
+
+	const [categories, setCategories] = useState<any[]>([]);
+
+	useEffect(() => {
+		getCategories().then((res) => {
+			setCategories(res.data.data);
+		});
+	}, []);
 
 	const [form, setForm] = useState({
 		title: "",
@@ -52,12 +62,17 @@ export default function CreateArticlePage() {
 				onChange={(e) => setForm({ ...form, cover_image_url: e.target.value })}
 			/>
 
-			<input
-				type="number"
-				placeholder="Category ID"
+			<select
 				className="border p-2 w-full"
+				value={form.category}
 				onChange={(e) => setForm({ ...form, category: Number(e.target.value) })}
-			/>
+			>
+				{categories.map((cat) => (
+					<option key={cat.id} value={cat.id}>
+						{cat.name}
+					</option>
+				))}
+			</select>
 
 			<Button type="submit">Save</Button>
 		</form>
