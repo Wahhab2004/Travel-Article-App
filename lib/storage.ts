@@ -1,5 +1,8 @@
-export const saveAuth = (data: { user: any; jwt: string }) => {
-	localStorage.setItem("auth", JSON.stringify(data));
+export const saveAuth = (payload: any) => {
+	localStorage.setItem("auth", JSON.stringify(payload));
+	localStorage.setItem("jwt", payload.jwt);
+
+	document.cookie = `jwt=${payload.jwt}; path=/`;
 };
 
 export const getAuth = () => {
@@ -9,8 +12,6 @@ export const getAuth = () => {
 };
 
 export const clearAuth = () => {
-	if (typeof window === "undefined") return;
-
-	localStorage.removeItem("auth");
-	localStorage.removeItem("jwt");
+	localStorage.clear();
+	document.cookie = "jwt=; Max-Age=0; path=/";
 };
