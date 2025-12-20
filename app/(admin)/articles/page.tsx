@@ -26,7 +26,7 @@ export default function ArticlesPage() {
 	const [categories, setCategories] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
-	// States untuk Filter & Pagination
+	// States Filter & Pagination
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const [page, setPage] = useState(1);
@@ -34,7 +34,7 @@ export default function ArticlesPage() {
 
 	const observer = useRef<IntersectionObserver | null>(null);
 
-	// Ambil Kategori untuk Filter
+	// Mengambil Kategori untuk Filter
 	useEffect(() => {
 		const fetchCats = async () => {
 			try {
@@ -71,7 +71,7 @@ export default function ArticlesPage() {
 		[searchTerm, selectedCategory]
 	);
 
-	// Reset dan ambil data ulang saat filter berubah
+	// Meriset dan mengambil ulang data saat filter berubah
 	useEffect(() => {
 		setPage(1);
 		fetchArticlesData(1, true);
@@ -106,7 +106,7 @@ export default function ArticlesPage() {
 
 	return (
 		<div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
-			{/* --- HEADER --- */}
+			{/* Header */}
 			<div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-slate-200 pb-10">
 				<div>
 					<div className="flex items-center gap-3 text-blue-600 mb-3">
@@ -167,7 +167,7 @@ export default function ArticlesPage() {
 				</div>
 			</div>
 
-			{/* --- KONDISI DATA TIDAK DITEMUKAN --- */}
+			{/* Kondisi Data Tidak Ditemukan */}
 			{!isLoading && articles.length === 0 ? (
 				<div className="flex flex-col items-center justify-center py-24 text-center bg-slate-50/50 rounded-[40px] border-2 border-dashed border-slate-200">
 					<div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-sm mb-6">
@@ -192,7 +192,7 @@ export default function ArticlesPage() {
 					</Button>
 				</div>
 			) : (
-				/* --- GRID ARTIKEL --- */
+				/* Grid Artikel */
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
 					{articles.map((item, index) => (
 						<Card
@@ -278,7 +278,7 @@ export default function ArticlesPage() {
 				</div>
 			)}
 
-			{/* Akhir dari Daftar */}
+			{/* Akhir Daftar */}
 			{!hasMore && articles.length > 0 && !isLoading && (
 				<div className="text-center pb-20 text-slate-400 font-bold text-sm uppercase tracking-[0.2em]">
 					✨ Semua artikel telah ditampilkan
