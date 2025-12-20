@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
 	const token = request.cookies.get("jwt")?.value;
 
-	const protectedPaths = ["/dashboard", "/articles"];
+	const protectedPaths = ["/dashboard", "/articles", "/categories"];
 
 	const isProtected = protectedPaths.some((path) =>
 		request.nextUrl.pathname.startsWith(path)
@@ -18,5 +18,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/dashboard/:path*", "/articles/:path*"],
+	matcher: ["/dashboard/:path*", "/articles/:path*", "/categories/:path*"],
 };

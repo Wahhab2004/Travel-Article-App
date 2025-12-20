@@ -22,7 +22,7 @@ export default function LogoutButton() {
 
 	return (
 		<Button variant="destructive" onClick={handleLogout}>
-			Clear Token / Logout
+			Logout
 		</Button>
 	);
 }
