@@ -1,0 +1,4 @@
+Catatan
+
+1. Parameter fecth di article tidak berfungsi dengan baik.
+2. Mengapa harus ada useAdminGuard? Padahal sudah ada middleware. useAdminGuard sudah dihapus

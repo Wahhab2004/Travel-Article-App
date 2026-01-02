@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Compass, ArrowRight, LockKeyhole, Globe2 } from "lucide-react";
 
 export default function LandingPage() {

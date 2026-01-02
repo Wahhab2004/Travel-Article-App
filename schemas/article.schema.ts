@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Validasi menggunakan Zod
 export const articleSchema = z.object({
 	title: z
 		.string()

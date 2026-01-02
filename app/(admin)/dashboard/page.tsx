@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { getDashboardStats } from "@/lib/dashboard";
 import { getArticles } from "@/lib/articles";
 import { toastError } from "@/lib/toast";
-import { useAdminGuard } from "@/hooks/useProtectedRoute";
-import { FileText, Layers, Eye, ArrowUpRight, Plus } from "lucide-react";
+// import { useAdminGuard } from "@/hooks/useProtectedRoute";
+import { FileText, Layers, Eye, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -13,7 +13,8 @@ export default function DashboardPage() {
 	const [recentArticles, setRecentArticles] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	useAdminGuard();
+	// Tidak perlu pakai useAdminGuard? Karena sudah ada middleware
+	// useAdminGuard();
 
 	useEffect(() => {
 		const fetchDashboardData = async () => {

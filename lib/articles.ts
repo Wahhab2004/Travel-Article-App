@@ -2,8 +2,8 @@ import api from "@/lib/api";
 
 /* READ */
 export const getArticles = (
-	page: number = 1,
-	pageSize: number = 9,
+	page: number = 0,
+	pageSize: number = 2,
 	search: string = "",
 	category: string = ""
 ) => {
@@ -20,6 +20,7 @@ export const getArticles = (
 	return api.get(url);
 };
 
+/* READ BY ID */
 export const getArticleBydocumentId = (documentId: string) =>
 	api.get(`/articles/${documentId}`);
 
